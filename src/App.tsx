@@ -62,7 +62,12 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <MealProvider>
-        <Box sx={{ flexGrow: 1, minHeight: '100vh', bgcolor: 'background.default' }}>
+        <Box sx={{ 
+          display: 'flex', 
+          flexDirection: 'column',
+          height: '100vh',
+          bgcolor: 'background.default' 
+        }}>
           <AppBar position="static" color="primary" elevation={0}>
             <Toolbar>
               <RestaurantIcon sx={{ mr: 2 }} />
@@ -71,7 +76,17 @@ function App() {
               </Typography>
             </Toolbar>
           </AppBar>
-          <Container maxWidth="md" sx={{ mt: 4 }}>
+          <Container 
+            maxWidth="md" 
+            sx={{ 
+              mt: 4,
+              mb: 4,
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              overflow: 'hidden'
+            }}
+          >
             <Paper sx={{ width: '100%', mb: 4 }}>
               <Tabs
                 value={tabValue}
@@ -86,21 +101,23 @@ function App() {
               </Tabs>
             </Paper>
 
-            <TabPanel value={tabValue} index={0}>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                <MealSuggestion type="breakfast" />
-                <MealSuggestion type="lunch" />
-                <MealSuggestion type="dinner" />
-              </Box>
-            </TabPanel>
+            <Box sx={{ flex: 1, overflow: 'hidden' }}>
+              <TabPanel value={tabValue} index={0}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  <MealSuggestion type="breakfast" />
+                  <MealSuggestion type="lunch" />
+                  <MealSuggestion type="dinner" />
+                </Box>
+              </TabPanel>
 
-            <TabPanel value={tabValue} index={1}>
-              <MealList />
-            </TabPanel>
+              <TabPanel value={tabValue} index={1}>
+                <MealList />
+              </TabPanel>
 
-            <TabPanel value={tabValue} index={2}>
-              <MealHistory />
-            </TabPanel>
+              <TabPanel value={tabValue} index={2}>
+                <MealHistory />
+              </TabPanel>
+            </Box>
           </Container>
         </Box>
       </MealProvider>
