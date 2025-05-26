@@ -79,6 +79,8 @@ function App() {
                 indicatorColor="secondary"
                 textColor="primary"
                 centered
+                variant="scrollable"
+                scrollButtons="auto"              
               >
                 <Tab label="Today's Suggestions" />
                 <Tab label="Manage Meals" />
