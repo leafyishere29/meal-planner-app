@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import { format, subDays, isToday, isYesterday } from 'date-fns';
 import { useMeal } from '../context/MealContext';
-import type { Meal, MealType } from '../types/meal';
+import type { UserMeal, MealType } from '../types/meal';
 
 const MealHistory: React.FC = () => {
   const { meals, mealHistory } = useMeal();
@@ -66,7 +66,7 @@ const MealHistory: React.FC = () => {
               </Box>
               <Box sx={{ pl: 2 }}>
                 {mealTypes.map((type) => {
-                  const meal = dayMeals[type as keyof typeof dayMeals] as Meal;
+                  const meal = dayMeals[type as keyof typeof dayMeals] as UserMeal;
                   return (
                     <Box key={type} sx={{ mb: 1 }}>
                       <Typography
