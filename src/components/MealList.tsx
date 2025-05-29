@@ -17,16 +17,26 @@ import {
   IconButton,
   Divider,
   Chip,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Grid,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
+import SearchIcon from '@mui/icons-material/Search';
 import { useMeal } from '../context/MealContext';
 import type { MealType } from '../types/meal';
+import { predefinedMeals, type PredefinedMeal } from '../data/predefinedMeals';
 
 export const MealList: React.FC = () => {
   const { meals, addMeal, removeMeal } = useMeal();
   const [newMealName, setNewMealName] = useState('');
   const [newMealType, setNewMealType] = useState<MealType>('breakfast');
+  const [searchDialogOpen, setSearchDialogOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const handleAddMeal = () => {
     if (newMealName.trim()) {
@@ -44,11 +54,29 @@ export const MealList: React.FC = () => {
     }
   };
 
+  const handleAddPredefinedMeal = (meal: PredefinedMeal) => {
+    addMeal({
+      name: meal.name,
+      type: meal.type,
+    });
+    setSearchDialogOpen(false);
+    setSearchQuery('');
+    setSelectedCategory(null);
+  };
+
   const mealTypes: MealType[] = ['breakfast', 'lunch', 'dinner'];
   const mealsByType = mealTypes.reduce((acc, type) => {
     acc[type] = meals.filter(meal => meal.type === type);
     return acc;
   }, {} as Record<MealType, typeof meals>);
+
+  const categories = Array.from(new Set(predefinedMeals.map(meal => meal.category))).filter(Boolean);
+
+  const filteredPredefinedMeals = predefinedMeals.filter(meal => {
+    const matchesSearch = meal.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = !selectedCategory || meal.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
 
   return (
     <Card>
@@ -86,6 +114,13 @@ export const MealList: React.FC = () => {
             startIcon={<AddIcon />}
           >
             Add
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={() => setSearchDialogOpen(true)}
+            startIcon={<SearchIcon />}
+          >
+            Browse Meals
           </Button>
         </Box>
 
@@ -131,6 +166,84 @@ export const MealList: React.FC = () => {
             </List>
           </Box>
         ))}
+
+        <Dialog
+          open={searchDialogOpen}
+          onClose={() => setSearchDialogOpen(false)}
+          maxWidth="md"
+          fullWidth
+        >
+          <DialogTitle>Browse Predefined Meals</DialogTitle>
+          <DialogContent>
+            <Box sx={{ mb: 2, mt: 1 }}>
+              <Grid container spacing={2}>
+                <Grid item xs={12} md={8}>
+                  <TextField
+                    fullWidth
+                    label="Search meals"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Type to search..."
+                  />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <FormControl fullWidth>
+                    <InputLabel>Category</InputLabel>
+                    <Select
+                      value={selectedCategory || ''}
+                      label="Category"
+                      onChange={(e) => setSelectedCategory(e.target.value || null)}
+                    >
+                      <MenuItem value="">All Categories</MenuItem>
+                      {categories.map((category) => (
+                        <MenuItem key={category} value={category}>
+                          {category}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </Grid>
+            </Box>
+            <List>
+              {filteredPredefinedMeals.map((meal, index) => (
+                <React.Fragment key={`${meal.name}-${meal.type}`}>
+                  {index > 0 && <Divider />}
+                  <ListItem
+                    component="div"
+                    onClick={() => handleAddPredefinedMeal(meal)}
+                    sx={{ cursor: 'pointer' }}
+                  >
+                    <ListItemText
+                      primary={meal.name}
+                      secondary={
+                        <Box sx={{ display: 'flex', gap: 1, mt: 0.5 }}>
+                          <Chip
+                            label={meal.type}
+                            size="small"
+                            color="primary"
+                            variant="outlined"
+                          />
+                          {meal.category && (
+                            <Chip
+                              label={meal.category}
+                              size="small"
+                              color="secondary"
+                              variant="outlined"
+                            />
+                          )}
+                        </Box>
+                      }
+                    />
+                  </ListItem>
+                </React.Fragment>
+              ))}
+            </List>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setSearchDialogOpen(false)}>Close</Button>
+          </DialogActions>
+        </Dialog>
       </CardContent>
     </Card>
   );
