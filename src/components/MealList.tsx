@@ -22,7 +22,7 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { useMeal } from '../context/MealContext';
-import type { MealType } from '../types/meal';
+import { MealAttributeKey, type MealType } from '../types/meal';
 import { predefinedMeals } from '../data/predefinedMeals';
 
 export const MealList: React.FC = () => {
@@ -54,24 +54,32 @@ export const MealList: React.FC = () => {
         <Typography variant="h5" component="div" gutterBottom>
           Add New Meal
         </Typography>
-        <Box sx={{ display: 'flex', gap: 2, mb: 4 }}>
+        <Box sx={{ display: "flex", gap: 2, mb: 4 }}>
           <Autocomplete
             freeSolo
             options={filteredPredefinedMeals}
-            getOptionLabel={(option) => 
-              typeof option === 'string' ? option : option.name
+            getOptionLabel={(option) =>
+              typeof option === "string" ? option : option.name
             }
             renderOption={(props, option) => (
               <li {...props}>
-                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                <Box>
                   <Typography>{option.name}</Typography>
-                  {option.category && (
-                    <Typography variant="caption" color="text.secondary">
-                      {option.category}
-                    </Typography>
-                  )}
+                  {option.attributes
+                    .filter(
+                      (attribute) =>
+                        [MealAttributeKey.CUISINE, MealAttributeKey.CATEGORY].includes(attribute.attributeKey)
+                    )
+                    .map((attribute) => (
+                      <Chip
+                        label={attribute.value.charAt(0).toUpperCase() + attribute.value.slice(1)}
+                        size="small"
+                        sx={{ mr: 1 }}
+                      />
+                    ))}
                 </Box>
               </li>
+              
             )}
             renderInput={(params) => (
               <TextField
@@ -85,14 +93,14 @@ export const MealList: React.FC = () => {
             )}
             value={newMealName}
             onChange={(_, newValue) => {
-              if (typeof newValue === 'string') {
+              if (typeof newValue === "string") {
                 setNewMealName(newValue);
               } else if (newValue) {
                 setNewMealName(newValue.name);
               }
             }}
             onKeyPress={(event) => {
-              if (event.key === 'Enter') {
+              if (event.key === "Enter") {
                 handleAddMeal(newMealName);
               }
             }}
@@ -130,7 +138,7 @@ export const MealList: React.FC = () => {
         </Typography>
         {mealTypes.map((type) => (
           <Box key={type} sx={{ mb: 3 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+            <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
               <Typography variant="h6" color="primary">
                 {type.charAt(0).toUpperCase() + type.slice(1)}
               </Typography>
@@ -160,7 +168,10 @@ export const MealList: React.FC = () => {
                 </React.Fragment>
               ))}
               {mealsByType[type].length === 0 && (
-                <Typography color="text.secondary" sx={{ pl: 2, fontStyle: 'italic' }}>
+                <Typography
+                  color="text.secondary"
+                  sx={{ pl: 2, fontStyle: "italic" }}
+                >
                   No meals added yet
                 </Typography>
               )}

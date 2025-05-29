@@ -1,21 +1,21 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import type { Meal, MealType, MealHistory } from '../types/meal';
+import type { UserMeal, MealType, MealHistory } from '../types/meal';
 import { subDays, isAfter } from 'date-fns';
 
 interface MealContextType {
-  meals: Meal[];
+  meals: UserMeal[];
   mealHistory: MealHistory[];
-  addMeal: (meal: Omit<Meal, 'id'>) => void;
+  addMeal: (meal: Omit<UserMeal, 'id'>) => void;
   removeMeal: (id: string) => void;
   markAsCooked: (mealId: string) => void;
-  getSuggestions: (type: MealType) => Meal[];
-  getNextSuggestion: (type: MealType) => Meal | null;
+  getSuggestions: (type: MealType) => UserMeal[];
+  getNextSuggestion: (type: MealType) => UserMeal | null;
 }
 
 const MealContext = createContext<MealContextType | undefined>(undefined);
 
 export const MealProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [meals, setMeals] = useState<Meal[]>(() => {
+  const [meals, setMeals] = useState<UserMeal[]>(() => {
     const savedMeals = localStorage.getItem('meals');
     return savedMeals ? JSON.parse(savedMeals) : [];
   });
@@ -33,8 +33,8 @@ export const MealProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem('mealHistory', JSON.stringify(mealHistory));
   }, [mealHistory]);
 
-  const addMeal = (meal: Omit<Meal, 'id'>) => {
-    const newMeal: Meal = {
+  const addMeal = (meal: Omit<UserMeal, 'id'>) => {
+    const newMeal: UserMeal = {
       ...meal,
       id: Math.random().toString(36).substr(2, 9),
     };
@@ -53,7 +53,7 @@ export const MealProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setMealHistory([...mealHistory, newHistory]);
   };
 
-  const getSuggestions = (type: MealType): Meal[] => {
+  const getSuggestions = (type: MealType): UserMeal[] => {
     const sevenDaysAgo = subDays(new Date(), 7);
     return meals.filter(meal => {
       if (meal.type !== type) return false;
@@ -64,7 +64,7 @@ export const MealProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
-  const getNextSuggestion = (type: MealType): Meal | null => {
+  const getNextSuggestion = (type: MealType): UserMeal | null => {
     const suggestions = getSuggestions(type);
     return suggestions[0] || null;
   };

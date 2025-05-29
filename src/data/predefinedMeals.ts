@@ -1,39 +1,262 @@
-import type { MealType } from '../types/meal';
-
-export interface PredefinedMeal {
-  name: string;
-  type: MealType;
-  category?: string;
-}
+import {
+  DietCategoryKey,
+  MealAttributeKey,
+  MealCategoryKey,
+  MealCuisineKey,
+  type PredefinedMeal,
+} from "../types/meal";
 
 export const predefinedMeals: PredefinedMeal[] = [
   // Breakfast
-  { name: 'Oatmeal with Fruits', type: 'breakfast', category: 'Healthy' },
-  { name: 'Scrambled Eggs with Toast', type: 'breakfast', category: 'Classic' },
-  { name: 'Pancakes with Maple Syrup', type: 'breakfast', category: 'Sweet' },
-  { name: 'Avocado Toast', type: 'breakfast', category: 'Healthy' },
-  { name: 'Breakfast Burrito', type: 'breakfast', category: 'Savory' },
-  { name: 'Yogurt Parfait', type: 'breakfast', category: 'Healthy' },
-  { name: 'French Toast', type: 'breakfast', category: 'Sweet' },
-  { name: 'Breakfast Sandwich', type: 'breakfast', category: 'Classic' },
+  {
+    name: "Poha",
+    type: "breakfast",
+    attributes: [
+      { attributeKey: MealAttributeKey.CUISINE, value: MealCuisineKey.INDIAN },
+      {
+        attributeKey: MealAttributeKey.CATEGORY,
+        value: MealCategoryKey.HEALTHY,
+      },
+      {
+        attributeKey: MealAttributeKey.DIET_CATEGORY,
+        value: DietCategoryKey.VEGAN,
+      },
+      {
+        attributeKey: MealAttributeKey.INGREDIENTS,
+        value: "flattened rice, mustard seeds, turmeric, onions, peas",
+      },
+    ],
+  },
+  {
+    name: "Idli with Sambar",
+    type: "breakfast",
+    attributes: [
+      { attributeKey: MealAttributeKey.CUISINE, value: MealCuisineKey.INDIAN },
+      {
+        attributeKey: MealAttributeKey.DIET_CATEGORY,
+        value: DietCategoryKey.VEGETARIAN,
+      },
+      {
+        attributeKey: MealAttributeKey.INGREDIENTS,
+        value: "rice, urad dal, sambar (lentils, vegetables)",
+      },
+    ],
+  },
+  {
+    name: "Paratha with Curd",
+    type: "breakfast",
+    attributes: [
+      {
+        attributeKey: MealAttributeKey.CATEGORY,
+        value: MealCategoryKey.CLASSIC,
+      },
+      {
+        attributeKey: MealAttributeKey.DIET_CATEGORY,
+        value: DietCategoryKey.VEGETARIAN,
+      },
+      {
+        attributeKey: MealAttributeKey.INGREDIENTS,
+        value: "whole wheat flour, curd, ghee, potato or paneer filling",
+      },
+    ],
+  },
+  {
+    name: "Upma",
+    type: "breakfast",
+    attributes: [
+      { attributeKey: MealAttributeKey.CUISINE, value: MealCuisineKey.INDIAN },
+      {
+        attributeKey: MealAttributeKey.DIET_CATEGORY,
+        value: DietCategoryKey.VEGETARIAN,
+      },
+      {
+        attributeKey: MealAttributeKey.INGREDIENTS,
+        value: "semolina, mustard seeds, curry leaves, vegetables",
+      },
+    ],
+  },
+  {
+    name: "Masala Dosa",
+    type: "breakfast",
+    attributes: [
+      { attributeKey: MealAttributeKey.CUISINE, value: MealCuisineKey.INDIAN },
+      {
+        attributeKey: MealAttributeKey.DIET_CATEGORY,
+        value: DietCategoryKey.VEGETARIAN,
+      },
+      {
+        attributeKey: MealAttributeKey.INGREDIENTS,
+        value: "rice, urad dal, potato filling",
+      },
+    ],
+  },
 
   // Lunch
-  { name: 'Caesar Salad', type: 'lunch', category: 'Healthy' },
-  { name: 'Chicken Sandwich', type: 'lunch', category: 'Classic' },
-  { name: 'Vegetable Stir Fry', type: 'lunch', category: 'Healthy' },
-  { name: 'Pasta Primavera', type: 'lunch', category: 'Italian' },
-  { name: 'Quinoa Bowl', type: 'lunch', category: 'Healthy' },
-  { name: 'Burrito Bowl', type: 'lunch', category: 'Mexican' },
-  { name: 'Greek Salad', type: 'lunch', category: 'Mediterranean' },
-  { name: 'Sushi Roll', type: 'lunch', category: 'Asian' },
+  {
+    name: "Rajma Chawal",
+    type: "lunch",
+    attributes: [
+      { attributeKey: MealAttributeKey.CUISINE, value: MealCuisineKey.INDIAN },
+      {
+        attributeKey: MealAttributeKey.DIET_CATEGORY,
+        value: DietCategoryKey.VEGAN,
+      },
+      {
+        attributeKey: MealAttributeKey.INGREDIENTS,
+        value: "kidney beans, rice, tomatoes, onions, spices",
+      },
+    ],
+  },
+  {
+    name: "Chole Bhature",
+    type: "lunch",
+    attributes: [
+      {
+        attributeKey: MealAttributeKey.CATEGORY,
+        value: MealCategoryKey.CLASSIC,
+      },
+      {
+        attributeKey: MealAttributeKey.DIET_CATEGORY,
+        value: DietCategoryKey.VEGETARIAN,
+      },
+      {
+        attributeKey: MealAttributeKey.INGREDIENTS,
+        value: "chickpeas, flour, spices",
+      },
+    ],
+  },
+  {
+    name: "Vegetable Pulao with Raita",
+    type: "lunch",
+    attributes: [
+      {
+        attributeKey: MealAttributeKey.CATEGORY,
+        value: MealCategoryKey.HEALTHY,
+      },
+      {
+        attributeKey: MealAttributeKey.DIET_CATEGORY,
+        value: DietCategoryKey.VEGETARIAN,
+      },
+      {
+        attributeKey: MealAttributeKey.INGREDIENTS,
+        value: "rice, mixed vegetables, curd, spices",
+      },
+    ],
+  },
+  {
+    name: "Sambar Rice",
+    type: "lunch",
+    attributes: [
+      { attributeKey: MealAttributeKey.CUISINE, value: MealCuisineKey.INDIAN },
+      {
+        attributeKey: MealAttributeKey.DIET_CATEGORY,
+        value: DietCategoryKey.VEGAN,
+      },
+      {
+        attributeKey: MealAttributeKey.INGREDIENTS,
+        value: "lentils, tamarind, vegetables, rice",
+      },
+    ],
+  },
+  {
+    name: "Fish Curry with Rice",
+    type: "lunch",
+    attributes: [
+      { attributeKey: MealAttributeKey.CUISINE, value: MealCuisineKey.SEAFOOD },
+      {
+        attributeKey: MealAttributeKey.DIET_CATEGORY,
+        value: DietCategoryKey.NON_VEGETARIAN,
+      },
+      {
+        attributeKey: MealAttributeKey.INGREDIENTS,
+        value: "fish, coconut milk, tamarind, rice, spices",
+      },
+    ],
+  },
 
   // Dinner
-  { name: 'Grilled Salmon', type: 'dinner', category: 'Seafood' },
-  { name: 'Beef Stir Fry', type: 'dinner', category: 'Asian' },
-  { name: 'Vegetable Curry', type: 'dinner', category: 'Indian' },
-  { name: 'Chicken Parmesan', type: 'dinner', category: 'Italian' },
-  { name: 'Tacos', type: 'dinner', category: 'Mexican' },
-  { name: 'Roast Chicken', type: 'dinner', category: 'Classic' },
-  { name: 'Pasta Carbonara', type: 'dinner', category: 'Italian' },
-  { name: 'Vegetable Lasagna', type: 'dinner', category: 'Italian' },
-]; 
+  {
+    name: "Palak Paneer with Roti",
+    type: "dinner",
+    attributes: [
+      { attributeKey: MealAttributeKey.CUISINE, value: MealCuisineKey.INDIAN },
+      {
+        attributeKey: MealAttributeKey.DIET_CATEGORY,
+        value: DietCategoryKey.VEGETARIAN,
+      },
+      {
+        attributeKey: MealAttributeKey.INGREDIENTS,
+        value: "spinach, paneer, spices, wheat flour",
+      },
+    ],
+  },
+  {
+    name: "Chicken Curry with Rice",
+    type: "dinner",
+    attributes: [
+      {
+        attributeKey: MealAttributeKey.CATEGORY,
+        value: MealCategoryKey.CLASSIC,
+      },
+      {
+        attributeKey: MealAttributeKey.DIET_CATEGORY,
+        value: DietCategoryKey.NON_VEGETARIAN,
+      },
+      {
+        attributeKey: MealAttributeKey.INGREDIENTS,
+        value: "chicken, onions, tomatoes, spices, rice",
+      },
+    ],
+  },
+  {
+    name: "Dal Tadka with Jeera Rice",
+    type: "dinner",
+    attributes: [
+      {
+        attributeKey: MealAttributeKey.CATEGORY,
+        value: MealCategoryKey.HEALTHY,
+      },
+      {
+        attributeKey: MealAttributeKey.DIET_CATEGORY,
+        value: DietCategoryKey.VEGAN,
+      },
+      {
+        attributeKey: MealAttributeKey.INGREDIENTS,
+        value: "lentils, cumin, garlic, rice",
+      },
+    ],
+  },
+  {
+    name: "Baingan Bharta with Roti",
+    type: "dinner",
+    attributes: [
+      { attributeKey: MealAttributeKey.CUISINE, value: MealCuisineKey.INDIAN },
+      {
+        attributeKey: MealAttributeKey.DIET_CATEGORY,
+        value: DietCategoryKey.VEGAN,
+      },
+      {
+        attributeKey: MealAttributeKey.INGREDIENTS,
+        value: "eggplant, onions, tomatoes, wheat flour",
+      },
+    ],
+  },
+  {
+    name: "Paneer Butter Masala with Naan",
+    type: "dinner",
+    attributes: [
+      {
+        attributeKey: MealAttributeKey.CATEGORY,
+        value: MealCategoryKey.CLASSIC,
+      },
+      {
+        attributeKey: MealAttributeKey.DIET_CATEGORY,
+        value: DietCategoryKey.VEGETARIAN,
+      },
+      {
+        attributeKey: MealAttributeKey.INGREDIENTS,
+        value: "paneer, cream, butter, tomatoes, naan",
+      },
+    ],
+  },
+];
