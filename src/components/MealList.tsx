@@ -17,51 +17,27 @@ import {
   IconButton,
   Divider,
   Chip,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Grid,
+  Autocomplete,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import SearchIcon from '@mui/icons-material/Search';
 import { useMeal } from '../context/MealContext';
 import type { MealType } from '../types/meal';
-import { predefinedMeals, type PredefinedMeal } from '../data/predefinedMeals';
+import { predefinedMeals } from '../data/predefinedMeals';
 
 export const MealList: React.FC = () => {
   const { meals, addMeal, removeMeal } = useMeal();
   const [newMealName, setNewMealName] = useState('');
   const [newMealType, setNewMealType] = useState<MealType>('breakfast');
-  const [searchDialogOpen, setSearchDialogOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  const handleAddMeal = () => {
-    if (newMealName.trim()) {
+  const handleAddMeal = (mealName: string) => {
+    if (mealName.trim()) {
       addMeal({
-        name: newMealName.trim(),
+        name: mealName.trim(),
         type: newMealType,
       });
       setNewMealName('');
     }
-  };
-
-  const handleKeyPress = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter') {
-      handleAddMeal();
-    }
-  };
-
-  const handleAddPredefinedMeal = (meal: PredefinedMeal) => {
-    addMeal({
-      name: meal.name,
-      type: meal.type,
-    });
-    setSearchDialogOpen(false);
-    setSearchQuery('');
-    setSelectedCategory(null);
   };
 
   const mealTypes: MealType[] = ['breakfast', 'lunch', 'dinner'];
@@ -70,13 +46,7 @@ export const MealList: React.FC = () => {
     return acc;
   }, {} as Record<MealType, typeof meals>);
 
-  const categories = Array.from(new Set(predefinedMeals.map(meal => meal.category))).filter(Boolean);
-
-  const filteredPredefinedMeals = predefinedMeals.filter(meal => {
-    const matchesSearch = meal.name.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = !selectedCategory || meal.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+  const filteredPredefinedMeals = predefinedMeals.filter(meal => meal.type === newMealType);
 
   return (
     <Card>
@@ -85,13 +55,51 @@ export const MealList: React.FC = () => {
           Add New Meal
         </Typography>
         <Box sx={{ display: 'flex', gap: 2, mb: 4 }}>
-          <TextField
-            label="Meal Name"
+          <Autocomplete
+            freeSolo
+            options={filteredPredefinedMeals}
+            getOptionLabel={(option) => 
+              typeof option === 'string' ? option : option.name
+            }
+            renderOption={(props, option) => (
+              <li {...props}>
+                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                  <Typography>{option.name}</Typography>
+                  {option.category && (
+                    <Typography variant="caption" color="text.secondary">
+                      {option.category}
+                    </Typography>
+                  )}
+                </Box>
+              </li>
+            )}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Meal Name"
+                placeholder="Type or select a meal..."
+                fullWidth
+                sx={{ minWidth: 400 }}
+                onChange={(e) => setNewMealName(e.target.value)}
+              />
+            )}
             value={newMealName}
-            onChange={(e) => setNewMealName(e.target.value)}
-            onKeyPress={handleKeyPress}
-            fullWidth
-            placeholder="Enter meal name..."
+            onChange={(_, newValue) => {
+              if (typeof newValue === 'string') {
+                setNewMealName(newValue);
+              } else if (newValue) {
+                setNewMealName(newValue.name);
+              }
+            }}
+            onKeyPress={(event) => {
+              if (event.key === 'Enter') {
+                handleAddMeal(newMealName);
+              }
+            }}
+            disableClearable={false}
+            selectOnFocus={false}
+            clearOnBlur={false}
+            handleHomeEndKeys={false}
           />
           <FormControl sx={{ minWidth: 120 }}>
             <InputLabel>Type</InputLabel>
@@ -109,18 +117,11 @@ export const MealList: React.FC = () => {
           </FormControl>
           <Button
             variant="contained"
-            onClick={handleAddMeal}
+            onClick={() => handleAddMeal(newMealName)}
             disabled={!newMealName.trim()}
             startIcon={<AddIcon />}
           >
             Add
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={() => setSearchDialogOpen(true)}
-            startIcon={<SearchIcon />}
-          >
-            Browse Meals
           </Button>
         </Box>
 
@@ -166,84 +167,6 @@ export const MealList: React.FC = () => {
             </List>
           </Box>
         ))}
-
-        <Dialog
-          open={searchDialogOpen}
-          onClose={() => setSearchDialogOpen(false)}
-          maxWidth="md"
-          fullWidth
-        >
-          <DialogTitle>Browse Predefined Meals</DialogTitle>
-          <DialogContent>
-            <Box sx={{ mb: 2, mt: 1 }}>
-              <Grid container spacing={2}>
-                <Grid item xs={12} md={8}>
-                  <TextField
-                    fullWidth
-                    label="Search meals"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Type to search..."
-                  />
-                </Grid>
-                <Grid item xs={12} md={4}>
-                  <FormControl fullWidth>
-                    <InputLabel>Category</InputLabel>
-                    <Select
-                      value={selectedCategory || ''}
-                      label="Category"
-                      onChange={(e) => setSelectedCategory(e.target.value || null)}
-                    >
-                      <MenuItem value="">All Categories</MenuItem>
-                      {categories.map((category) => (
-                        <MenuItem key={category} value={category}>
-                          {category}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-              </Grid>
-            </Box>
-            <List>
-              {filteredPredefinedMeals.map((meal, index) => (
-                <React.Fragment key={`${meal.name}-${meal.type}`}>
-                  {index > 0 && <Divider />}
-                  <ListItem
-                    component="div"
-                    onClick={() => handleAddPredefinedMeal(meal)}
-                    sx={{ cursor: 'pointer' }}
-                  >
-                    <ListItemText
-                      primary={meal.name}
-                      secondary={
-                        <Box sx={{ display: 'flex', gap: 1, mt: 0.5 }}>
-                          <Chip
-                            label={meal.type}
-                            size="small"
-                            color="primary"
-                            variant="outlined"
-                          />
-                          {meal.category && (
-                            <Chip
-                              label={meal.category}
-                              size="small"
-                              color="secondary"
-                              variant="outlined"
-                            />
-                          )}
-                        </Box>
-                      }
-                    />
-                  </ListItem>
-                </React.Fragment>
-              ))}
-            </List>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setSearchDialogOpen(false)}>Close</Button>
-          </DialogActions>
-        </Dialog>
       </CardContent>
     </Card>
   );
