@@ -23,6 +23,20 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
+      - name: Debug Environment Variables
+        run: |
+          echo "Checking if secrets are set:"
+          if [ -n "${{ secrets.VITE_FIREBASE_API_KEY }}" ]; then
+            echo "VITE_FIREBASE_API_KEY is set"
+          else
+            echo "VITE_FIREBASE_API_KEY is empty"
+          fi
+          if [ -n "${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}" ]; then
+            echo "VITE_FIREBASE_AUTH_DOMAIN is set"
+          else
+            echo "VITE_FIREBASE_AUTH_DOMAIN is empty"
+          fi
+
       - name: Build
         env:
           VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
@@ -32,18 +46,12 @@ jobs:
           VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
           VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
           VITE_FIREBASE_MEASUREMENT_ID: ${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}
-        run: npm run build
+        run: |
+          echo "Building with environment variables..."
+          npm run build
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
-        env:
-          VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
-          VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
-          VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
-          VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
-          VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
-          VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
-          VITE_FIREBASE_MEASUREMENT_ID: ${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}
         with:
           folder: dist
           branch: gh-pages 
