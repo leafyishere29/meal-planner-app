@@ -8,7 +8,7 @@ import {
   Chip,
 } from '@mui/material';
 import { format, subDays, isToday, isYesterday } from 'date-fns';
-import { useMeal } from '../context/MealContext';
+import { useMeal } from '../contexts/MealContext';
 import type { UserMeal, MealType } from '../types/meal';
 
 const MealHistory: React.FC = () => {

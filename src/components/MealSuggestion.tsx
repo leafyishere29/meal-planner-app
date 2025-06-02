@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import { useMeal } from '../context/MealContext';
+import { useMeal } from '../contexts/MealContext';
 import type { MealType } from '../types/meal';
 
 interface MealSuggestionProps {

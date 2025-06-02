@@ -21,7 +21,7 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import { useMeal } from '../context/MealContext';
+import { useMeal } from '../contexts/MealContext';
 import { MealAttributeKey, type MealType } from '../types/meal';
 import { predefinedMeals } from '../data/predefinedMeals';
 
